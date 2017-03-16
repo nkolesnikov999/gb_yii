@@ -6,10 +6,12 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use yii\data\Pagination;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\RegisterForm;
-use app\models\EntryForm;
+use app\models\Product;
+
 
 class SiteController extends Controller
 {
@@ -64,26 +66,25 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
-    
-    public function actionTest()
+
+    public function actionProducts()
     {
-         return $this->render('test', ['title' => 'Lesson 1', 'content' => 'Hellllo!!!']);
-    }
+        $query = Product::find();
 
-    public function actionEntry()
-    {
-        $model = new EntryForm();
+        $pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => $query->count(),
+        ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // данные в $model удачно проверены
+        $products = $query->orderBy('name')
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->all();
 
-            // делаем что-то полезное с $model ...
-
-            return $this->render('entry-confirm', ['model' => $model]);
-        } else {
-            // либо страница отображается первый раз, либо есть ошибка в данных
-            return $this->render('entry', ['model' => $model]);
-        }
+        return $this->render('products', [
+            'products' => $products,
+            'pagination' => $pagination,
+        ]);
     }
     
     public function actionRegister()
@@ -101,8 +102,7 @@ class SiteController extends Controller
             // либо страница отображается первый раз, либо есть ошибка в данных
             return $this->render('register', ['model' => $model]);
         }
-        
-        echo "Regisration...";
+
     }
 
     /**
