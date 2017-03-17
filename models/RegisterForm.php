@@ -23,6 +23,8 @@ class RegisterForm extends Model
         return [
             // username and password are both required
             [['username', 'password'], 'required'],
+            // username is validated by validateUsername()
+            ['username', 'validateUsername'],
         ];
     }
     
@@ -48,4 +50,24 @@ class RegisterForm extends Model
         return Yii::$app->user->login(User::findByUsername($this->username));
     }
 
+    /**
+     * Validates the username.
+     * This method serves as the inline validation for username.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateUsername($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = User::findByUsername($this->username);
+
+            if ($user) {
+                $this->addError($attribute, 'Такое имя уже есть');
+            }
+        }
+    }
+
+    
+    
 }
