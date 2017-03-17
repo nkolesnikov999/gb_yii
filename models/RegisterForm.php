@@ -45,7 +45,7 @@ class RegisterForm extends Model
             return false;
         }
 
-        return true;
+        return Yii::$app->user->login(User::findByUsername($this->username));
     }
 
 }
