@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use yii\data\Pagination;
+use yii\data\ActiveDataProvider;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\RegisterForm;
@@ -69,22 +69,37 @@ class SiteController extends Controller
 
     public function actionProducts()
     {
-        $query = Product::find();
-
-        $pagination = new Pagination([
-            'defaultPageSize' => 10,
-            'totalCount' => $query->count(),
+        $dataProvider = new ActiveDataProvider([
+            'query' => Product::find()->orderBy('name'),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
-
-        $products = $query->orderBy('name')
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
 
         return $this->render('products', [
-            'products' => $products,
-            'pagination' => $pagination,
+            'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    /**
+     * Displays a single Product model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+    
+    protected function findModel($id)
+    {
+        if (($model = Product::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
     
     public function actionRegister()
