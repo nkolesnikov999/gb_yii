@@ -4,6 +4,15 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\base\Event;
+
+
+class MessageEvent extends Event
+{
+    public $username;
+    public $email;
+}
+
 
 /**
  * RegisterForm is the model behind the login form.
@@ -12,8 +21,11 @@ use yii\base\Model;
  */
 class RegisterForm extends Model
 {
+    const EVENT_REGISTER = 'userRegister';
+
     public $username;
     public $password;
+    public $email;
 
     /**
      * @return array the validation rules.
@@ -22,9 +34,10 @@ class RegisterForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['username', 'password', 'email'], 'required'],
             // username is validated by validateUsername()
             ['username', 'validateUsername'],
+            ['email', 'email'],
         ];
     }
     
@@ -46,6 +59,11 @@ class RegisterForm extends Model
         if (!$user->register()) {
             return false;
         }
+
+        $event = new MessageEvent;
+        $event->username = $this->username;
+        $event->email = $this->email;
+        $this->trigger(self::EVENT_REGISTER, $event);
 
         return Yii::$app->user->login(User::findByUsername($this->username));
     }

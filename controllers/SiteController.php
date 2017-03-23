@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Emails;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -109,9 +110,11 @@ class SiteController extends Controller
         }
         
         $model = new RegisterForm();
+        $emailModel = new Emails();
+        $model->on(RegisterForm::EVENT_REGISTER, [$emailModel, 'saveEmail']);
 
         if ($model->load(Yii::$app->request->post()) && $model->register()) {
-            // данные в $model удачно проверены
+
             return $this->goBack();
         } else {
             // либо страница отображается первый раз, либо есть ошибка в данных
