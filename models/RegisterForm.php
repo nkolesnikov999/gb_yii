@@ -7,13 +7,6 @@ use yii\base\Model;
 use yii\base\Event;
 
 
-class MessageEvent extends Event
-{
-    public $username;
-    public $email;
-}
-
-
 /**
  * RegisterForm is the model behind the login form.
  *
@@ -60,9 +53,10 @@ class RegisterForm extends Model
             return false;
         }
 
-        $event = new MessageEvent;
-        $event->username = $this->username;
-        $event->email = $this->email;
+        $event = new Event;
+        $event->data = ['username' => $this->username,
+                        'email' => $this->email];
+
         $this->trigger(self::EVENT_REGISTER, $event);
 
         return Yii::$app->user->login(User::findByUsername($this->username));

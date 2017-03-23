@@ -47,8 +47,8 @@ class Emails extends \yii\db\ActiveRecord
 
     public function saveEmail($event)
     {
-        $this->username = $event->sender->username;
-        $this->email = $event->sender->email;
+        $this->username = $event->sender['username'];
+        $this->email = $event->sender['email'];
         $this->save();
     }
 }
