@@ -4,8 +4,6 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use yii\base\Event;
-
 
 /**
  * RegisterForm is the model behind the login form.
@@ -53,11 +51,7 @@ class RegisterForm extends Model
             return false;
         }
 
-        $event = new Event;
-        $event->data = ['username' => $this->username,
-                        'email' => $this->email];
-
-        $this->trigger(self::EVENT_REGISTER, $event);
+        $this->trigger(self::EVENT_REGISTER);
 
         return Yii::$app->user->login(User::findByUsername($this->username));
     }
