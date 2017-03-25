@@ -9,9 +9,16 @@ $this->title = 'Продукты';
 
 ?>
 
-<?= ListView::widget([
-        'dataProvider' => $dataProvider,
-        'itemView' => '_list',
-    ]) 
+<?php 
+
+    if ($this->beginCache('products', 
+                            ['duration' => 60])) {
+
+        echo ListView::widget([
+            'dataProvider' => $dataProvider,
+            'itemView' => '_list',
+        ]);
+        $this->endCache();
+    }
 ?>
       

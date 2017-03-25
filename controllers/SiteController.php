@@ -22,6 +22,15 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+            // Закеширована страница Контакты
+            [
+                'class' => 'yii\filters\PageCache',
+                'only' => ['contact'],
+                'duration' => 60,
+                'variations' => [
+                    \Yii::$app->language,
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout'],
@@ -89,8 +98,21 @@ class SiteController extends Controller
      */
     public function actionView($id)
     {
+        //Закеширована цена в детаил продуктов
+        $model = $this->findModel($id);
+        $cache = \Yii::$app->cache;
+        //$cache->flush();
+
+        $keyPrice = 'price' . $id;
+        $price = $cache->get($keyPrice);
+        if (!$price) {
+            $cache->set($keyPrice, $model->price, 60);
+        } else {
+            $model->price = $price;
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
     

@@ -65,16 +65,30 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $model = new Product();
-        $customers = Customers::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'customers' => $customers,
+                'customers' => $this->findCustomers(),
             ]);
         }
+    }
+
+    private function findCustomers()
+    {
+        $cache = \Yii::$app->cache;
+        //$cache->flush();
+
+        $key = 'customers';
+        $customers = $cache->get($key);
+        if (!$customers) {
+            $customers = Customers::find()->all();
+            $cache->set($key, $customers, 60);
+        } 
+
+        return $customers;
     }
 
     /**
@@ -86,14 +100,13 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $customers = Customers::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'customers' => $customers,
+                'customers' => $this->findCustomers(),
             ]);
         }
     }
