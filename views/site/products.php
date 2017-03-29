@@ -11,14 +11,14 @@ $this->title = 'Продукты';
 
 <?php 
 
-    if ($this->beginCache('products', 
-                            ['duration' => 60])) {
+    // if ($this->beginCache('products', 
+    //                        ['duration' => 60])) {
 
         echo ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '_list',
         ]);
-        $this->endCache();
-    }
+    //   $this->endCache();
+    // }
 ?>
       

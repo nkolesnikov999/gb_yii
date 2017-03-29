@@ -29,6 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'short_description',
             'description:ntext',
             'price',
+            [
+                'format' => 'html',
+                'label' => 'Image',
+                'value' => function($data){
+                    return Html::img($data->getImage(), ['width'=>100]);
+                }
+            ],
             'customer_id',
             'created_at',
             'updated_at',

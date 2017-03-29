@@ -66,4 +66,32 @@ class Product extends ActiveRecord
             ],
         ];
     }
+
+    public function saveImage($filename)
+    {
+        $this->image = $filename;
+        return $this->save();
+    }
+
+    public function getImage()
+    {
+        if($this->image)
+        {
+            return '/uploads/' . $this->image;
+        }
+        return '/no-image.png';
+    }
+
+    public function deleteImage()
+    {
+        $imageUploadModel = new ImageUpload();
+        $imageUploadModel->deleteCurrentImage($this->image);
+    }
+
+    public function beforeDelete()
+    {
+        $this->deleteImage();
+
+        return parent::beforeDelete();
+    }
 }

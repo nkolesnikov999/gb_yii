@@ -6,6 +6,8 @@ use Yii;
 use app\models\Product;
 use app\models\Customers;
 use app\models\ProductSearch;
+use app\models\ImageUpload;
+use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -138,5 +140,23 @@ class ProductController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionSetImage($id)
+    {
+        $model = new ImageUpload;
+
+        if (Yii::$app->request->isPost) 
+        {
+            $product = $this->findModel($id);
+            $file = UploadedFile::getInstance($model, 'image');
+
+            if($product->saveImage($model->uploadFile($file, $product->image)))
+            {
+                return $this->redirect(['view', 'id' => $product->id]);
+            }
+        }
+
+        return $this->render('image', ['model' => $model]);
     }
 }
