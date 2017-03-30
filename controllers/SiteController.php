@@ -76,6 +76,18 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+    
+    public function actionRus()
+    {
+        Yii::$app->language = 'ru';
+        return $this->render('index');
+    }
+
+    public function actionEng()
+    {
+        Yii::$app->language = 'en';
+        return $this->render('index');
+    }
 
     public function actionProducts()
     {
