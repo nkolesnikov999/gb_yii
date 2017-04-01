@@ -94,4 +94,21 @@ class Product extends ActiveRecord
 
         return parent::beforeDelete();
     }
+
+    public static function updatePrices($prices)
+    {
+        $id = $prices[0];
+        $product = self::findOne($id);
+
+        if($product){
+            $product->price = (double)$prices[1];
+            if($product->save())
+            {
+                echo "New price for " . $product->name . " id: " . $id . " is " . $product->price . "\n";
+            }
+        } else {
+            echo "No product with id: " . $id . "\n";
+        }
+        
+    }
 }

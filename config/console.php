@@ -21,6 +21,44 @@ $config = [
             ],
         ],
         'db' => $db,
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+            'class' => 'Swift_SmtpTransport',
+            'host' => 'spl42.hosting.reg.ru', // введите хост или ip почтового сервера
+            'username' => 'nk@nkpro.net', // введите логин
+            'password' => '', // введите пароль
+            'port' => '587',    // порт назначается в зависимости от службы
+            'encryption' => 'tls',
+             ],
+        ],
+        //пример для отправки через gmail.com
+        /*'mail' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'username@gmail.com',
+                'password' => 'password',
+                'port' => '587',
+                'encryption' => 'tls',
+            ],
+        ],*/
+        //пример для отправки через MS Exchange
+        /*'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+                'transport' => [
+                    'class' => 'Swift_SmtpTransport',
+                    'host' => 'exchange.example.com', //вставляем имя или адрес почтового сервера
+                    'username' => '', 
+                    'password' => '',
+                    'port' => '25',
+                    'encryption' => '',
+            ],
+        ],*/
     ],
     'params' => $params,
     /*
